@@ -17,6 +17,21 @@
     .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.stat{padding:18px;border-radius:13px;background:#f7f9fb;border:1px solid var(--line)}.stat.primary{background:var(--light);border-color:#c5e1d7}.stat small{display:block;color:var(--muted);font-size:.8rem}.stat strong{display:block;font-size:clamp(1.14rem,2.3vw,1.52rem);font-variant-numeric:tabular-nums;margin-top:5px;line-height:1.25}.stat small.detail{margin-top:6px}
     .table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--line)}table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:.89rem;font-variant-numeric:tabular-nums}th,td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--line)}th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:white}thead th{background:#eff4f7;color:#344558;font-size:.82rem}thead th:first-child{background:#eff4f7}tbody tr:last-child td{border-bottom:0}tbody tr:hover td,tbody tr:hover td:first-child{background:#f3f8f6}.selected-row td,.selected-row td:first-child{background:#eaf5f1;font-weight:700}
     .section-intro{color:var(--muted);font-size:.9rem;margin-bottom:15px}.pill{display:inline-flex;background:#eaf5f1;color:#125b50;padding:3px 9px;border-radius:99px;font-size:.76rem;font-weight:700;vertical-align:middle}.pill.warning{background:#fff0e8;color:#a13b28}.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:1px solid #bfcbd2;background:#fff;border-radius:9px;padding:9px 13px;font:inherit;cursor:pointer}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.foot{color:var(--muted);font-size:.82rem;line-height:1.6}.divider{height:1px;background:var(--line);margin:20px 0}.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.two .field{margin:0}.summary{margin-top:14px}.summary p{margin-bottom:8px}.subsection{border-top:1px solid var(--line);padding-top:16px;margin-top:16px}.tag{font-size:.74rem;color:var(--muted);font-weight:500}.error{color:#a13b28}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+    /* På mobil kan den lange innstillingsdelen skjules, mens resultater vises med én gang. */
+    .settings-disclosure{min-width:0}
+    .settings-disclosure>summary{display:none}
+    @media(max-width:850px){
+      .settings-disclosure>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none;cursor:pointer;background:var(--light);border:1px solid #c5e1d7;border-radius:13px;padding:15px 16px;margin-bottom:13px;min-height:64px}
+      .settings-disclosure>summary::-webkit-details-marker{display:none}
+      .settings-disclosure>summary:focus-visible{outline:3px solid #9cdbcc;outline-offset:2px}
+      .settings-disclosure>summary .summary-title{font-weight:750;display:block}
+      .settings-disclosure>summary .summary-values{font-size:.82rem;color:var(--muted);display:block;margin-top:3px}
+      .settings-disclosure>summary .summary-icon{font-size:1.3rem;line-height:1;flex-shrink:0;transition:transform .15s ease}
+      .settings-disclosure[open]>summary .summary-icon{transform:rotate(180deg)}
+      .settings-disclosure[open]>summary{margin-bottom:0;border-radius:13px 13px 0 0;border-bottom:0}
+      .settings-disclosure[open]>.panel{border-radius:0 0 13px 13px}
+      .settings-disclosure>.panel>h2{display:none}
+    }
     /* Mobil: kontroller får plass, resultater blir lesbare og tabeller blir kort. */
     @media(max-width:850px){
       .layout{grid-template-columns:minmax(0,1fr);gap:0}
@@ -64,6 +79,11 @@
   <p class="lead">En fleksibel kalkulator for boligkjøp. Sammenlign kjøpesum, egenkapital, boliglån og eventuelle private lån. Endre tallene og del resultatet – beregningene skjer i nettleseren.</p>
   <div class="layout">
     <aside class="controls">
+      <details class="settings-disclosure" id="settingsDisclosure" open>
+        <summary aria-label="Vis eller skjul forutsetninger">
+          <span><span class="summary-title">Endre forutsetninger</span><span class="summary-values" id="settingsSummary">Kjøpesum og egenkapital</span></span>
+          <span class="summary-icon" aria-hidden="true">⌄</span>
+        </summary>
       <section class="panel">
         <h2>Forutsetninger</h2>
         <p class="editable-note">Alle tall kan endres direkte i feltene. Skyveknappene dekker vanlige beløp (kjøpesum opptil 10 mill. og egenkapital opptil 3 mill.).</p>
@@ -104,6 +124,7 @@
         </div>
         <div class="actions"><button class="btn" id="reset" type="button">Tilbakestill standardverdier</button><button class="btn primary" id="share" type="button">Kopier delbar lenke</button></div>
       </section>
+      </details>
     </aside>
     <div>
       <section class="panel">
@@ -158,7 +179,7 @@
   }
   function update(){const s=selected(),totalEquity=s.equity+s.gift,bank=principal(s.price,totalEquity,s),m=annuity(bank,s.interest,s.years),pm=annuity(s.privateLoan,s.privateInterest,s.privateYears),debt=bank+s.privateLoan+s.otherDebt;
     const ratio=s.salary?debt/s.salary:(debt?Infinity:0),over=ratio>5;const housing=s.fees+s.electricity+s.insurance+s.maintenance+s.otherHousing;
-    $('equityTotal').textContent=money(totalEquity);$('payment').textContent=money(m);$('totalMonthly').textContent=money(m+pm+s.otherMonthly+housing);$('loan').textContent=money(bank);$('privatePayment').textContent=money(pm);$('purchaseCosts').textContent=money(costs(s.price,s));$('debtRatio').textContent=Number.isFinite(ratio)?ratio.toFixed(2).replace('.',',')+'×':'Ikke beregnbar';
+    $('settingsSummary').textContent='Kjøpesum '+money(s.price)+' · egenkapital '+money(totalEquity);$('equityTotal').textContent=money(totalEquity);$('payment').textContent=money(m);$('totalMonthly').textContent=money(m+pm+s.otherMonthly+housing);$('loan').textContent=money(bank);$('privatePayment').textContent=money(pm);$('purchaseCosts').textContent=money(costs(s.price,s));$('debtRatio').textContent=Number.isFinite(ratio)?ratio.toFixed(2).replace('.',',')+'×':'Ikke beregnbar';
     $('status').textContent=s.salary===0?'Ingen inntekt oppgitt':over?'Over 5×-grensen':'Innenfor 5×-grensen';$('status').classList.toggle('warning',over||s.salary===0);
     const excess=totalEquity+s.privateLoan-(s.price+costs(s.price,s));
     $('breakdown').innerHTML='<p><b>Fordeling per måned:</b> Banklån '+money(m)+' · privatlån '+money(pm)+' · andre lån '+money(s.otherMonthly)+' · felleskostnader '+money(s.fees)+' · øvrige boligkostnader '+money(housing-s.fees)+'.</p>'+(excess>0?'<p class="error">Egenkapital og privatlån overstiger finansieringsbehovet med '+money(excess)+'. Reduser ett av beløpene for et realistisk scenario.</p>':'');
@@ -169,6 +190,13 @@
     $('tableHint').textContent='Tabellene tilpasses valgt kjøpesum ('+money(s.price)+') og samlet egenkapital ('+money(totalEquity)+'). Gave, egne midler og totalen vises samlet i kolonnene; andre lån og privatlån holdes uendret.';
     for(const id of ['price','equity']){const range=$(id+'Range');range.value=Math.min(Number(range.max),Math.max(Number(range.min),s[id]));}
   }
+  // Vis alle kontroller på desktop; skjul dem som standard på mobil.
+  const settingsDisclosure=$('settingsDisclosure');
+  const mobileQuery=window.matchMedia('(max-width:850px)');
+  function adaptSettings(e){settingsDisclosure.open=!e.matches;}
+  adaptSettings(mobileQuery);
+  if(mobileQuery.addEventListener)mobileQuery.addEventListener('change',adaptSettings);
+  else mobileQuery.addListener(adaptSettings);
   for(const id of ids)$(id).addEventListener('input',update);
   for(const id of ['price','equity'])$(id+'Range').addEventListener('input',()=>{$(id).value=$(id+'Range').value;update();});
   $('reset').addEventListener('click',()=>{for(const [id,v] of Object.entries(initial)){if(id==='isFreehold')$(id).checked=v;else $(id).value=v;}update();});
