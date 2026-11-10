@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Gratis boligkalkulator: sammenlign kjøpesum, egenkapital, boliglån, privatlån og månedlige kostnader.">
+  <title>Boligkalkulator – lån og månedlige kostnader</title>
+  <style>
+    :root{color-scheme:light;--bg:#f5f6f8;--surface:#fff;--ink:#182333;--muted:#617085;--line:#dce3ea;--accent:#17665b;--light:#eaf5f1;--shadow:0 8px 26px rgba(20,36,53,.06)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+    main{max-width:1180px;margin:auto;padding:36px 20px 80px}h1{font-size:clamp(1.9rem,4vw,3rem);letter-spacing:-.04em;line-height:1.1;margin:0 0 10px}h2{font-size:1.25rem;margin:0 0 16px;letter-spacing:-.015em}h3{font-size:1rem;margin:22px 0 12px}p{margin:0 0 16px}.lead{color:var(--muted);max-width:800px}
+    .eyebrow{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:750;margin-bottom:8px}.layout{display:grid;grid-template-columns:minmax(300px,355px) minmax(0,1fr);gap:20px;margin-top:28px;align-items:start}
+    .panel{background:var(--surface);padding:24px;border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:20px}.field{margin-bottom:18px}.field:last-child{margin-bottom:0}
+    .field-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}.field-head label{font-weight:650;font-size:.91rem}.field-head output{font-variant-numeric:tabular-nums;font-weight:750;white-space:nowrap}
+    input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;margin:8px 0 1px}input[type=number],select{width:100%;border:1px solid #cbd5df;border-radius:9px;padding:9px 10px;font:inherit;color:var(--ink);background:white;min-width:0}input:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #9cdbcc;outline-offset:2px}
+    .hint,.note{font-size:.82rem;color:var(--muted)}.editable-note{padding:10px 12px;background:var(--light);border-radius:9px;margin-bottom:18px;font-size:.85rem;color:#125b50}.field label{display:block;font-weight:650;font-size:.9rem;margin-bottom:6px}.field-head label{margin-bottom:0}.button-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hint{margin:5px 0 0}.check{display:flex;align-items:flex-start;gap:9px;font-size:.9rem}.check input{accent-color:var(--accent);margin-top:5px}
+    .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.stat{padding:18px;border-radius:13px;background:#f7f9fb;border:1px solid var(--line)}.stat.primary{background:var(--light);border-color:#c5e1d7}.stat small{display:block;color:var(--muted);font-size:.8rem}.stat strong{display:block;font-size:clamp(1.14rem,2.3vw,1.52rem);font-variant-numeric:tabular-nums;margin-top:5px;line-height:1.25}.stat small.detail{margin-top:6px}
+    .table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--line)}table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:.89rem;font-variant-numeric:tabular-nums}th,td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--line)}th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:white}thead th{background:#eff4f7;color:#344558;font-size:.82rem}thead th:first-child{background:#eff4f7}tbody tr:last-child td{border-bottom:0}tbody tr:hover td,tbody tr:hover td:first-child{background:#f3f8f6}.selected-row td,.selected-row td:first-child{background:#eaf5f1;font-weight:700}
+    .section-intro{color:var(--muted);font-size:.9rem;margin-bottom:15px}.pill{display:inline-flex;background:#eaf5f1;color:#125b50;padding:3px 9px;border-radius:99px;font-size:.76rem;font-weight:700;vertical-align:middle}.pill.warning{background:#fff0e8;color:#a13b28}.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:1px solid #bfcbd2;background:#fff;border-radius:9px;padding:9px 13px;font:inherit;cursor:pointer}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.foot{color:var(--muted);font-size:.82rem;line-height:1.6}.divider{height:1px;background:var(--line);margin:20px 0}.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.two .field{margin:0}.summary{margin-top:14px}.summary p{margin-bottom:8px}.subsection{border-top:1px solid var(--line);padding-top:16px;margin-top:16px}.tag{font-size:.74rem;color:var(--muted);font-weight:500}.error{color:#a13b28}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+    @media(max-width:850px){.layout{grid-template-columns:1fr}.panel{padding:19px}main{padding:25px 13px 60px}}@media(max-width:480px){.stats{grid-template-columns:1fr}.stat strong{font-size:1.45rem}table{font-size:.8rem}th,td{padding:9px 10px}.two{grid-template-columns:1fr}}
+    @media print{body{background:white}main{padding:0}.layout{display:block}.panel{box-shadow:none;break-inside:avoid}.controls,.actions{display:none}.panel{border-color:#ddd}.table-wrap{overflow:visible}table{font-size:10px}}
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Privatøkonomi · sammenlign scenarier</div>
+  <h1>Hva vil boligen koste?</h1>
+  <p class="lead">En fleksibel kalkulator for boligkjøp. Sammenlign kjøpesum, egenkapital, boliglån og eventuelle private lån. Endre tallene og del resultatet – beregningene skjer i nettleseren.</p>
+  <div class="layout">
+    <aside class="controls">
+      <section class="panel">
+        <h2>Forutsetninger</h2>
+        <p class="editable-note">Alle tall kan endres direkte i feltene. Skyveknappene dekker vanlige beløp (kjøpesum opptil 10 mill. og egenkapital opptil 3 mill.).</p>
+        <div class="field"><div class="field-head"><label for="price">Kjøpesum (kr)</label></div><input id="price" type="number" min="0" max="10000000" step="25000" value="2750000"><input type="range" id="priceRange" min="500000" max="10000000" step="50000" value="2750000" aria-label="Juster kjøpesum"><p class="hint">Skriv inn et beløp eller bruk skyveknappen (opptil 10 mill.).</p></div>
+        <div class="field"><div class="field-head"><label for="equity">Egenkapital – egne midler (kr)</label></div><input id="equity" type="number" min="0" max="10000000" step="25000" value="800000"><input type="range" id="equityRange" min="0" max="3000000" step="25000" value="800000" aria-label="Juster egne midler"><p class="hint">Penger du selv legger inn ved kjøpet.</p></div>
+        <div class="field"><div class="field-head"><label for="gift">Gave / forskudd på arv (kr) <span class="tag">valgfritt</span></label></div><input id="gift" type="number" min="0" max="10000000" step="25000" value="250000"><p class="hint">Et beløp du ikke skal betale tilbake, for eksempel fra familie. Regnes sammen med egne midler som samlet egenkapital.</p></div>
+        <p class="editable-note">Samlet egenkapital i kjøpet: <strong id="equityTotal">1 050 000 kr</strong></p>
+        <div class="two">
+          <div class="field"><div class="field-head"><label for="interest">Boliglånsrente (%)</label></div><input id="interest" type="number" min="0" max="30" step="0.1" value="5.3"></div>
+          <div class="field"><div class="field-head"><label for="years">Nedbetalingstid (år)</label></div><input id="years" type="number" min="1" max="50" step="1" value="25"></div>
+        </div>
+        <h3>Privatlån <span class="tag">valgfritt</span></h3>
+        <div class="field"><div class="field-head"><label for="privateLoan">Privatlån brukt til kjøpet (kr)</label></div><input id="privateLoan" type="number" min="0" max="10000000" step="10000" value="0"><p class="hint">For eksempel lån fra familie. Reduserer banklånet, men teller fortsatt som gjeld.</p></div>
+        <div class="two">
+          <div class="field"><div class="field-head"><label for="privateInterest">Privatlånsrente (%)</label></div><input id="privateInterest" type="number" min="0" max="30" step="0.1" value="0"></div>
+          <div class="field"><div class="field-head"><label for="privateYears">Nedbetaling (år)</label></div><input id="privateYears" type="number" min="1" max="50" step="1" value="20"></div>
+        </div>
+        <div class="subsection">
+          <h3 style="margin-top:0">Andre kostnader og gjeld</h3>
+          <div class="two">
+            <div class="field"><label for="fees">Felleskostnader / mnd (kr)</label><input id="fees" type="number" min="0" max="1000000" step="100" value="2400"></div>
+            <div class="field"><label for="otherMonthly">Andre låns terminbeløp / mnd (kr)</label><input id="otherMonthly" type="number" min="0" max="1000000" step="100" value="3400"></div>
+            <div class="field"><label for="salary">Brutto årsinntekt (kr)</label><input id="salary" type="number" min="0" max="10000000" step="10000" value="512000"></div>
+            <div class="field"><label for="otherDebt">Annen eksisterende gjeld (kr)</label><input id="otherDebt" type="number" min="0" max="10000000" step="10000" value="512000"></div>
+          </div>
+          <p class="hint">Eksempel: studielån og billån. Månedsbeløp og restgjeld endres hver for seg. Brutto årsinntekt er også et redigerbart felt.</p>
+          <div class="two">
+            <div class="field"><label for="electricity">Strøm / mnd (kr)</label><input id="electricity" type="number" min="0" max="1000000" step="100" value="0"></div>
+            <div class="field"><label for="insurance">Forsikring / mnd (kr)</label><input id="insurance" type="number" min="0" max="1000000" step="100" value="0"></div>
+            <div class="field"><label for="maintenance">Vedlikehold / mnd (kr)</label><input id="maintenance" type="number" min="0" max="1000000" step="100" value="0"></div>
+            <div class="field"><label for="otherHousing">Annet bolig / mnd (kr)</label><input id="otherHousing" type="number" min="0" max="1000000" step="100" value="0"></div>
+          </div>
+        </div>
+        <div class="subsection">
+          <label class="check"><input id="isFreehold" type="checkbox" checked><span>Ta med dokumentavgift <small class="hint">(typisk ved selveier; normalt ikke ved borettslag)</small></span></label>
+          <div class="field" style="margin-top:14px"><label for="documentRate">Dokumentavgift (%)</label><input id="documentRate" type="number" min="0" max="100" step="0.1" value="2.5"></div>
+          <div class="field" style="margin-top:14px"><label for="otherCosts">Andre kjøpsomkostninger (kr)</label><input id="otherCosts" type="number" min="0" max="1000000" step="500" value="2000"></div>
+        </div>
+        <div class="actions"><button class="btn" id="reset" type="button">Tilbakestill standardverdier</button><button class="btn primary" id="share" type="button">Kopier delbar lenke</button></div>
+      </section>
+    </aside>
+    <div>
+      <section class="panel">
+        <h2>Valgt scenario <span class="pill" id="status">Innenfor 5×-grensen</span></h2>
+        <div class="stats">
+          <div class="stat primary"><small>Banklån per måned</small><strong id="payment">–</strong><small class="detail">Renter og avdrag</small></div>
+          <div class="stat primary"><small>Samlede månedlige utgifter</small><strong id="totalMonthly">–</strong><small class="detail">Inkl. oppgitte boligkostnader og lån</small></div>
+          <div class="stat"><small>Behov for banklån</small><strong id="loan">–</strong></div>
+          <div class="stat"><small>Privatlån per måned</small><strong id="privatePayment">–</strong></div>
+          <div class="stat"><small>Kjøpsomkostninger (anslag)</small><strong id="purchaseCosts">–</strong></div>
+          <div class="stat"><small>Samlet gjeld / bruttoinntekt</small><strong id="debtRatio">–</strong><small class="detail">Normal grense: 5×</small></div>
+        </div>
+        <div class="summary foot" id="breakdown"></div>
+        <p class="note" style="margin-top:14px" id="assessment"></p>
+      </section>
+      <section class="panel">
+        <h2>Månedskostnad ved ulik egenkapital</h2>
+        <p class="section-intro">Kolonnene viser samlet egenkapital (egne midler + gave), radene ulike kjøpesummer. Tallene er <b>banklån + privatlån + andre lån + alle oppgitte boligkostnader</b> per måned. Privatlånet og alle øvrige forutsetninger holdes fast. Gaven inngår i kolonnebeløpene.</p>
+        <div class="table-wrap"><table id="monthlyTable"><thead></thead><tbody></tbody></table></div>
+        <p class="hint" id="tableHint"></p>
+      </section>
+      <section class="panel">
+        <h2>Banklån ved ulik egenkapital</h2>
+        <p class="section-intro">Samme kombinasjoner som over. Viser banklånet etter fratrekk for samlet egenkapital og privatlån.</p>
+        <div class="table-wrap"><table id="loanTable"><thead></thead><tbody></tbody></table></div>
+      </section>
+      <section class="panel">
+        <h2>Slik fungerer beregningen</h2>
+        <p class="foot"><b>Finansiering:</b> Kjøpesum + kjøpsomkostninger − egenkapital − privatlån = behov for banklån. Samlet egenkapital er egne midler pluss gave eller forskudd på arv uten tilbakebetalingsplikt. Et lån fra familie er derimot gjeld og må oppgis til banken.</p>
+        <p class="foot"><b>Månedlige kostnader:</b> Boliglån og privatlån beregnes som annuitetslån med de valgte rentene og nedbetalingstidene. Et rentefritt privatlån fordeles jevnt over nedbetalingstiden. Andre lån og eventuelle strøm-, forsikrings- og vedlikeholdskostnader legges til med angitte månedsbeløp.</p>
+        <p class="foot"><b>Bankens vurdering:</b> Gjeldsgrad regnes fra banklån + privatlån + annen gjeld delt på brutto årslønn. 5×-grensen er kun én del av bankens vurdering. Banken vurderer også blant annet betjeningsevne ved renteøkning, livsopphold og belåningsgrad. Beregningen er ikke et finansieringsbevis.</p>
+        <p class="foot"><b>Ikke inkludert:</b> Utgifter som ikke er oppgitt, rentefradrag og eventuell fellesgjeld. Ved borettslag må eventuell fellesgjeld vurderes separat. Dokumentavgift og kjøpsomkostninger er forenklede anslag. Ved høy egenkapital vises null banklån, men et eventuelt finansieringsoverskudd må vurderes separat.</p>
+      </section>
+    </div>
+  </div>
+</main>
+<script>
+  'use strict';
+  const initial={price:2750000,equity:800000,gift:250000,interest:5.3,years:25,privateLoan:0,privateInterest:0,privateYears:20,fees:2400,otherMonthly:3400,salary:512000,otherDebt:512000,electricity:0,insurance:0,maintenance:0,otherHousing:0,isFreehold:true,documentRate:2.5,otherCosts:2000};
+  const ids=Object.keys(initial),$=id=>document.getElementById(id);
+  const money=n=>Math.round(n).toLocaleString('nb-NO')+' kr';
+  const short=n=>n>=1000000?(Number((n/1000000).toFixed(2)).toLocaleString('nb-NO')+' mill.'):n>=1000?(Number((n/1000).toFixed(0)).toLocaleString('nb-NO')+'k'):money(n);
+  const num=(id)=>Math.max(0,Number($(id).value)||0);
+  const selected=()=>Object.fromEntries(ids.map(id=>[id,id==='isFreehold'?$(id).checked:num(id)]));
+  const costs=(price,s)=>price*(s.isFreehold?s.documentRate/100:0)+s.otherCosts;
+  const principal=(price,equity,s)=>Math.max(0,price+costs(price,s)-equity-s.privateLoan);
+  function annuity(amount,interest,years){if(amount<=0)return 0;const n=Math.max(1,years*12),r=interest/1200;return r===0?amount/n:amount*r/(1-Math.pow(1+r,-n));}
+  function tableValues(center,delta,min,max){const arr=Array.from({length:5},(_,i)=>Math.min(max,Math.max(min,Math.round((center+(i-2)*delta)/25000)*25000)));return [...new Set(arr)].sort((a,b)=>a-b);}
+  function renderTable(id,s,prices,equities,mode){const plMonthly=annuity(s.privateLoan,s.privateInterest,s.privateYears);const housing=s.fees+s.electricity+s.insurance+s.maintenance+s.otherHousing;
+    $(id).querySelector('thead').innerHTML='<tr><th scope="col">Kjøpesum</th>'+equities.map(e=>'<th scope="col">'+short(e)+'</th>').join('')+'</tr>';
+    $(id).querySelector('tbody').innerHTML=prices.map(p=>'<tr'+(p===s.price?' class="selected-row"':'')+'><td>'+money(p)+'</td>'+equities.map(e=>{const bank=principal(p,e,s);const val=mode==='monthly'?annuity(bank,s.interest,s.years)+plMonthly+s.otherMonthly+housing:bank;return '<td>'+money(val)+'</td>';}).join('')+'</tr>').join('');
+  }
+  function update(){const s=selected(),totalEquity=s.equity+s.gift,bank=principal(s.price,totalEquity,s),m=annuity(bank,s.interest,s.years),pm=annuity(s.privateLoan,s.privateInterest,s.privateYears),debt=bank+s.privateLoan+s.otherDebt;
+    const ratio=s.salary?debt/s.salary:(debt?Infinity:0),over=ratio>5;const housing=s.fees+s.electricity+s.insurance+s.maintenance+s.otherHousing;
+    $('equityTotal').textContent=money(totalEquity);$('payment').textContent=money(m);$('totalMonthly').textContent=money(m+pm+s.otherMonthly+housing);$('loan').textContent=money(bank);$('privatePayment').textContent=money(pm);$('purchaseCosts').textContent=money(costs(s.price,s));$('debtRatio').textContent=Number.isFinite(ratio)?ratio.toFixed(2).replace('.',',')+'×':'Ikke beregnbar';
+    $('status').textContent=s.salary===0?'Ingen inntekt oppgitt':over?'Over 5×-grensen':'Innenfor 5×-grensen';$('status').classList.toggle('warning',over||s.salary===0);
+    const excess=totalEquity+s.privateLoan-(s.price+costs(s.price,s));
+    $('breakdown').innerHTML='<p><b>Fordeling per måned:</b> Banklån '+money(m)+' · privatlån '+money(pm)+' · andre lån '+money(s.otherMonthly)+' · felleskostnader '+money(s.fees)+' · øvrige boligkostnader '+money(housing-s.fees)+'.</p>'+(excess>0?'<p class="error">Egenkapital og privatlån overstiger finansieringsbehovet med '+money(excess)+'. Reduser ett av beløpene for et realistisk scenario.</p>':'');
+    $('assessment').textContent=s.salary===0?'Oppgi brutto årslønn for å beregne gjeldsgrad.':over?'Samlet gjeld overstiger normalgrensen på fem ganger bruttoinntekt. Banken kan bare gjøre unntak innenfor bestemte rammer.':'Gjeldsgraden er innenfor den vanlige femgangersgrensen. Banken må likevel vurdere betjeningsevne og resten av økonomien.';
+    const priceStep=Math.max(100000,Math.round((s.price*.12)/25000)*25000),equityStep=Math.max(100000,Math.round((Math.max(s.price*.1,100000))/25000)*25000);
+    const prices=tableValues(s.price,priceStep,0,10000000),equities=tableValues(totalEquity,equityStep,0,10000000);
+    renderTable('monthlyTable',s,prices,equities,'monthly');renderTable('loanTable',s,prices,equities,'loan');
+    $('tableHint').textContent='Tabellene tilpasses valgt kjøpesum ('+money(s.price)+') og samlet egenkapital ('+money(totalEquity)+'). Gave, egne midler og totalen vises samlet i kolonnene; andre lån og privatlån holdes uendret.';
+    for(const id of ['price','equity']){const range=$(id+'Range');range.value=Math.min(Number(range.max),Math.max(Number(range.min),s[id]));}
+  }
+  for(const id of ids)$(id).addEventListener('input',update);
+  for(const id of ['price','equity'])$(id+'Range').addEventListener('input',()=>{$(id).value=$(id+'Range').value;update();});
+  $('reset').addEventListener('click',()=>{for(const [id,v] of Object.entries(initial)){if(id==='isFreehold')$(id).checked=v;else $(id).value=v;}update();});
+  $('share').addEventListener('click',async()=>{const url=new URL(location.href);url.search=new URLSearchParams(Object.entries(selected()).map(([k,v])=>[k,String(v)])).toString();try{await navigator.clipboard.writeText(url.toString());$('share').textContent='Lenke kopiert!';setTimeout(()=>$('share').textContent='Kopier delbar lenke',2200);}catch{window.prompt('Kopier denne lenken:',url.toString());}});
+  const p=new URLSearchParams(location.search);for(const id of ids){if(!p.has(id))continue;if(id==='isFreehold'){$(id).checked=p.get(id)==='true';continue;}const n=Number(p.get(id)),el=$(id);if(Number.isFinite(n)&&n>=Number(el.min||0)&&n<=Number(el.max||Infinity))el.value=n;}
+  // Eldre versjoner delte "equity" som samlet beløp. Bevar totalen på slike lenker.
+  if(p.has('equity')&&!p.has('gift'))$('gift').value=0;
+  // Den aller første versjonen delte gave/buffer, men ikke "equity".
+  if(!p.has('equity')&&(p.has('gift')||p.has('buffer'))){const b=Math.max(0,Number(p.get('buffer'))||0);$('equity').value=Math.max(0,800000-b);}
+
+  if(!p.has('otherMonthly')&&p.has('studentMonthly'))$('otherMonthly').value=Math.max(0,Number(p.get('studentMonthly'))||0);
+  update();
+</script>
+</body>
+</html>
